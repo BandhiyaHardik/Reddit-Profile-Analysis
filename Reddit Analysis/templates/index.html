@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit User Analysis</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            color: #222222;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #FF4500;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        label {
+            font-size: 1.2em;
+            color: #333333;
+        }
+        
+        input[type="text"] {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #FF4500;
+            border-radius: 8px;
+            background-color: #f1f1f1;
+            color: #333333;
+            outline: none;
+        }
+        
+        button {
+            background-color: #FF4500;
+            color: #ffffff;
+            border: none;
+            padding: 12px 18px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        
+        button:hover {
+            background-color: #cc3700;
+            transform: scale(1.05);
+        }
+        
+        .user-info, .graphs, .suggestions {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f7f7f7;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .graph img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .btn-download {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 18px;
+            background-color: #FF4500;
+            color: white;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .btn-download:hover {
+            background-color: #cc3700;
+            transform: scale(1.05);
+        }
+        
+        ul {
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+        
+        li {
+            margin: 8px 0;
+            font-size: 1em;
+            color: #444444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Reddit User Analysis</h1>
+        <form method="post">
+            <label for="username">Enter Reddit Username:</label>
+            <input type="text" id="username" name="username" required>
+            <button type="submit">Analyze</button>
+        </form>
+
+        {% if user_info %}
+            <div class="user-info">
+                <h2>User Information</h2>
+                <p><strong>Username:</strong> {{ user_info.name }}</p>
+                <p><strong>Comment Karma:</strong> {{ user_info.comment_karma }}</p>
+                <p><strong>Link Karma:</strong> {{ user_info.link_karma }}</p>
+                <p><strong>Account Created:</strong> {{ user_info.created_utc | datetimeformat }}</p>
+                <a href="/download_report/{{ user_info.name }}" class="btn-download">Download Report</a>
+            </div>
+
+            <div class="graphs">
+                <h2>Visualizations</h2>
+                {% for title, graph in graphs.items() %}
+                    <div class="graph">
+                        <h3>{{ title.replace('_', ' ').title() }}</h3>
+                        <img src="data:image/png;base64,{{ graph }}" alt="{{ title }}">
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="suggestions">
+                <h2>Suggestions</h2>
+                <ul>
+                    {% for suggestion in suggestions %}
+                        <li>{{ suggestion }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
+<!-- Compare this snippet from FINAL%20DESIGN/new_design_wor/reddit_analyzer/templates/index.html: -->
